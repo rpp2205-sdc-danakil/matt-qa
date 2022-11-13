@@ -1,0 +1,33 @@
+{
+  "name": "rpp2205-sdc-danakil-matt-qa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpp2205-sdc-danakil/matt-qa.git"
+  },
+  "author": "Matt Alexander",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpp2205-sdc-danakil/matt-qa/issues"
+  },
+  "homepage": "https://github.com/rpp2205-sdc-danakil/matt-qa#readme",
+  "dependencies": {
+    "@jest/globals": "^29.3.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "jest": {
+    "verbose": true
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "babel-jest": "^29.3.1",
+    "jest": "^29.3.1"
+  }
+}
