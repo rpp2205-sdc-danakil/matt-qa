@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "jest"
   },
@@ -21,8 +20,7 @@
     "@jest/globals": "^29.3.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.7.2",
-    "n-readlines": "^1.0.1"
+    "mongoose": "^6.7.2"
   },
   "jest": {
     "verbose": true
@@ -31,7 +29,7 @@
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "babel-jest": "^29.3.1",
-    "csv": "^6.2.2",
+    "event-stream": "^4.0.1",
     "jest": "^29.3.1"
   }
 }

@@ -1,65 +1,101 @@
-import { Question } from '../db.js';
-import nReadlines from 'n-readlines';
+const fs = require('fs');
+const es = require('event-stream');
+const path = require('path');
 
-const delayBeforeStart = 3000;
-const filePath = '/Users/matt/hackreactor/projects/sdc/matt-qa/etl/questions.csv';
-const chunkMaxSize = 5000;
-let chunk = [];
-const questionsLines = new nReadlines('/Users/matt/hackreactor/projects/sdc/matt-qa/etl/questions.csv');
-console.log('LOADED FILE..');
+/******* CONFIGURABLES **********************************/
+const Collection = require('../db.js').Question;
+const csvPath = path.resolve(__dirname, 'questions.csv');
+const failedPath = path.resolve(__dirname, 'questions.failed.txt');
 
-let line = questionsLines.next();
-let itemCount = 0;
+const startDelay = 5000;
+const errorDelay = 2000;
+const chunkDelay = 0;
+const chunkMaxSize = 10000;
 
-const parseLine = (line) => {
-  line = line.toString('utf8').split(',');
+const parseDocument = (line) => {
   //  0 |     1    |  2 |     3      |    4     |     5     |    6   |   7  |
   //  id,product_id,body,date_written,asker_name,asker_email,reported,helpful
   const obj = {
-    _id: parseInt(line[0]),
+    _id: line[0],
     product_id: line[1],
-    body: line[2].replace(/"/g, ''),
+    body: line[2],
     date_written: line[3],
-    asker_name: line[4].replace(/"/g, ''),
-    asker_email: line[5].replace(/"/g, ''),
+    asker_name: line[4],
+    asker_email: line[5],
     reported: Boolean(line[6]),
     helpful: line[7]
   };
-
   return obj;
 };
-console.log('columns: ', parseLine(line));
+/*******************************************************/
 
-const makeChunk = (nextLine) => {
-  //  nextLine should be the readline 'next' fn
-  const chunk = [];
-  let line;
+let chunk = [];
 
-  while (line = nextLine() && chunk.length < chunkMaxSize) {
-    const parsed = parseLine(line);
-    chunk.push(parsed);
-  }
+let itemCount = 0;
+let failedCount = 0;
 
-  return chunk;
-};
 
-const insertChunk = (chunk) => {
-  return Question.insertMany(chunk)
-    .then(response => {
-      itemCount += chunk.length;
-      console.log('Inserted chunk...  ', '(', itemCount, ')');
-    })
-    .catch(err => console.warn('Error during insert: ', err));
+const logFailedData = (data) => {
+  console.warn('LOGGING: ', data);
+  fs.appendFile(failedPath, JSON.stringify(data) + '\n', err => {
+    if (err) {
+      console.error('logging failed data has failed..');
+    }
+  });
 }
 
 const runTransformAndLoad = () => {
-  console.log('Starting T & L ...');
-  try {
-    const chunk = makeChunk(questionsLines.next);
-    insertChunk(chunk);
-  } catch (err) {
-    console.error(err);
-  }
+  console.info('Starting T & L ...');
+
+  var s = fs.createReadStream(csvPath)
+    .pipe(es.split())
+    .pipe(es.mapSync(function (line) {
+      s.pause();
+      if (itemCount < 1) {
+        itemCount++;
+        s.resume();
+        return;
+      }
+      itemCount++;
+
+      let doc;
+      try {
+        line = `[${line}]`;
+        doc = parseDocument(JSON.parse(line));
+      } catch (err) {
+        failedCount++;
+        console.warn('FAILED parsing line: ', line);
+        setTimeout(s.resume, errorDelay);
+        return;
+      }
+      // console.log('PARSED LINE: ', parsed)
+      if (chunk.length < chunkMaxSize) {
+        chunk.push(doc);
+        s.resume();
+      } else {
+        Collection.insertMany(chunk)
+          .then((res) => {
+            let memUsed = process.memoryUsage().heapUsed / 1024 / 1024;
+            console.info('Inserted chunk...', `(items: ${itemCount} | failed: ${failedCount} | mem usage: ${memUsed.toFixed(1)} MB)`);
+            chunk = [];
+            setTimeout(s.resume, chunkDelay);
+          })
+          .catch(err => {
+            console.error('Error inserting into collection..', err);
+          });
+      }
+    })
+      .on('error', function (err) {
+        console.log('Error while reading file.', err);
+      })
+      .on('end', function () {
+        console.log('Read entire file.')
+        process.exit();
+      })
+    );
 }
 
-setTimeout(runTransformAndLoad, delayBeforeStart);
+console.clear();
+console.info('LOADED,', 'waiting', (startDelay / 1000).toFixed(1), 'sec');
+console.info(JSON.stringify({ chunkMaxSize, chunkDelay, errorDelay }));
+setTimeout(runTransformAndLoad, startDelay);

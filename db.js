@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const db = mongoose.connect('mongodb://127.0.0.1:27017/sdc');
 const { Schema, model } = mongoose;
 
@@ -73,8 +73,8 @@ const Photo = model('Photo', PhotoSchema);
 const Answer = model('Answer', AnswerSchema);
 const Question = model('Question', QuestionSchema);
 
-await Photo.createCollection();
-await Answer.createCollection();
-await Question.createCollection();
+Photo.createCollection();
+Answer.createCollection();
+Question.createCollection();
 
-export { Photo, Answer, Question };
+module.exports = { Photo, Answer, Question };

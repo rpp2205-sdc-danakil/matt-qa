@@ -1,4 +1,5 @@
 *.env
 node_modules/
 etl/*.csv
+etl/*.failed.txt
 *DS_Store
