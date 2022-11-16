@@ -20,10 +20,12 @@ const AnswerSchema = new Schema({
 });
 
 const QuestionSchema = new Schema({
+  _id: Number,
   product_id: { type: Number, required: true },
   body: String,
-  date: { type: Date, default: Date.now },
+  date_written: { type: Date, default: Date.now },
   asker_name: String,
+  asker_email: String,
   helpfulness: Number,
   reported: Boolean,
 }, {
