@@ -10,7 +10,7 @@ const failedPath = path.resolve(__dirname, 'questions.failed.txt');
 const startDelay = 5000;
 const errorDelay = 2000;
 const chunkDelay = 0;
-const chunkMaxSize = 10000;
+const chunkMaxSize = 50000;
 
 const parseDocument = (line) => {
   //  0 |     1    |  2 |     3      |    4     |     5     |    6   |   7  |
@@ -31,9 +31,12 @@ const parseDocument = (line) => {
 
 let chunk = [];
 
-let itemCount = 0;
+let itemCount = -1;
 let failedCount = 0;
 
+const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 const logFailedData = (data) => {
   console.warn('LOGGING: ', data);
@@ -47,11 +50,24 @@ const logFailedData = (data) => {
 const runTransformAndLoad = () => {
   console.info('Starting T & L ...');
 
+  const doInsert = (cb) => {
+    Collection.insertMany(chunk)
+      .then((res) => {
+        chunk = [];
+        setTimeout(cb, chunkDelay);
+      })
+      .catch(err => {
+        console.error('Error inserting into collection..', err);
+      });
+    let memUsed = process.memoryUsage().heapUsed / 1024 / 1024;
+    console.info('Inserting chunk...', `(items: ${numberWithCommas(itemCount)} | failed: ${failedCount} | mem usage: ${memUsed.toFixed(1)} MB)`);
+  };
+
   var s = fs.createReadStream(csvPath)
     .pipe(es.split())
     .pipe(es.mapSync(function (line) {
       s.pause();
-      if (itemCount < 1) {
+      if (itemCount === -1) {
         itemCount++;
         s.resume();
         return;
@@ -69,28 +85,21 @@ const runTransformAndLoad = () => {
         return;
       }
       // console.log('PARSED LINE: ', parsed)
+      chunk.push(doc);
       if (chunk.length < chunkMaxSize) {
-        chunk.push(doc);
         s.resume();
       } else {
-        Collection.insertMany(chunk)
-          .then((res) => {
-            let memUsed = process.memoryUsage().heapUsed / 1024 / 1024;
-            console.info('Inserted chunk...', `(items: ${itemCount} | failed: ${failedCount} | mem usage: ${memUsed.toFixed(1)} MB)`);
-            chunk = [];
-            setTimeout(s.resume, chunkDelay);
-          })
-          .catch(err => {
-            console.error('Error inserting into collection..', err);
-          });
+        doInsert(s.resume);
       }
     })
       .on('error', function (err) {
         console.log('Error while reading file.', err);
       })
       .on('end', function () {
-        console.log('Read entire file.')
-        process.exit();
+        if (chunk.length) {
+          doInsert(process.exit);
+        }
+        console.log('Read entire file.');
       })
     );
 }
