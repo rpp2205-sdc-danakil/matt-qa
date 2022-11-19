@@ -3,15 +3,17 @@ const db = mongoose.connect('mongodb://127.0.0.1:27017/sdc');
 const { Schema, model } = mongoose;
 
 const PhotoSchema = new Schema({
-  answer_id: Number,
-  url: String,
+  answer_id: { type: Number, required: true },
+  url: { type: String, required: true },
 });
 
 const AnswerSchema = new Schema({
-  product_id: { type: Number, required: true },
+  _id: Number,
+  question_id: { type: Number, required: true },
   body: String,
-  date: { type: Date, default: Date.now },
+  date_written: { type: Date, default: Date.now },
   answerer_name: String,
+  answerer_email: String,
   helpfulness: Number,
   reported: Boolean,
 }, {
