@@ -1,4 +1,7 @@
 *.env*
+!.env.Photo
+!.env.Answer
+!.env.Question
 node_modules/
 etl/*.csv
 etl/*.failed.txt
