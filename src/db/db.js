@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const db = mongoose.connect(process.env.DB_URL);
 const { Schema, model } = mongoose;
 
+const photoMethods = require('./photoMethods.js');
+const answerMethods = require('./answerMethods.js');
+const questionMethods = require('./questionMethods.js');
+
 const PhotoSchema = new Schema({
   answer_id: { type: Number, required: true },
   url: { type: String, required: true },
@@ -51,25 +55,9 @@ AnswerSchema.virtual('photos', {
 });
 
 // Define the methods
-PhotoSchema.methods.getPhotos = (answerId, options) => {
-  return this.model('Photo').find({ answer_id: answerId }).select('url');
-};
-
-QuestionSchema.methods.getQuestions = (productId, options) => {
-  const page = options.page || 1;
-  const count = options.count || 5;
-  // get questions for a certain product ID based on page and count
-  // get all answers for each question and insert them as an array into each question object
-  // get all photos for each answer and insert them as an array into each answer object
-
-  return this.find({ product_id: productId })
-  .skip((page - 1) * count)
-  .limit(count)
-  .populate('Answer')
-  .populate('Photo')
-  .exec();
-};
-
+PhotoSchema.methods = photoMethods;
+AnswerSchema.methods = answerMethods;
+QuestionSchema.methods = questionMethods;
 
 // Compile the schemas
 const Photo = model('Photo', PhotoSchema);

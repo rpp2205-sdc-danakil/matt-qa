@@ -34,21 +34,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(compression());
 
 app.get('/qa/questions/:product_id', getQuestions);
-
 app.get('/qa/questions/:question_id/answers', getAnswers);
 
 app.post('/qa/questions', postQuestion);
-
 app.post('/qa/questions/:question_id/answers', postAnswer);
 
 app.put('/qa/questions/:question_id/helpful', markQuestionHelpful);
-
 app.put('/qa/answers/:answer_id/helpful', markAnswerHelpful);
 
-app.put('/qa/answers/:answer_id/report', reportAnswer);
-
 app.put('/qa/questions/:question_id/report', reportQuestion);
-
+app.put('/qa/answers/:answer_id/report', reportAnswer);
 
 app.listen(port, function () {
   console.log(`SDC question/answer API listening on port ${port}`);
