@@ -1,5 +1,6 @@
+require('custom-env').env('default');
 const mongoose = require('mongoose');
-const db = mongoose.connect('mongodb://127.0.0.1:27017/sdc');
+const db = mongoose.connect(process.env.DB_URL);
 const { Schema, model } = mongoose;
 
 const PhotoSchema = new Schema({
