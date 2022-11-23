@@ -10,7 +10,7 @@ const es = require('event-stream');
 const path = require('path');
 
 /******* CONFIGURABLES (set in env file) ************************/
-const Collection = require('../db.js')[process.env.COLLECTION_NAME];
+const Collection = require('../src/db/db.js')[process.env.COLLECTION_NAME];
 const csvPath = path.resolve(__dirname, process.env.CSV_PATH);
 const failedPath = path.resolve(__dirname, process.env.FAILED_PATH);
 
@@ -26,6 +26,7 @@ for (let i = 0; i < process.env.NUM_COLS; i++) {
     docTemplate[col] = i;
   }
 }
+// console.log('DOC TEMPLATE:', docTemplate);
 Object.freeze(docTemplate);
 /****************************************************************/
 
@@ -52,7 +53,7 @@ const logFailedData = (data) => {
 
 const logAverageTimes = () => {
   const toFixed = (num) => {
-    return num.toFixed(3);
+    return num.toFixed(0);
   }
 
   let totalParseItems = 0;
@@ -78,6 +79,7 @@ const parseDocument = (line) => {
   for (let key in docTemplate) {
     doc[key] = line[docTemplate[key]];
   }
+  // console.log('PARSING:', line, doc);
   return doc;
 };
 

@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(compression());
 
-app.get('/qa/questions/:product_id', getQuestions);
+app.get('/qa/questions', getQuestions);
 app.get('/qa/questions/:question_id/answers', getAnswers);
 
 app.post('/qa/questions', postQuestion);
