@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const db = mongoose.connect(process.env.DB_URL);
 const { Schema, model } = mongoose;
 
-const photoMethods = require('./photoMethods.js');
-const answerMethods = require('./answerMethods.js');
-const questionMethods = require('./questionMethods.js');
+const photoStatics = require('./photoStatics.js');
+const answerStatics = require('./answerStatics.js');
+const questionStatics = require('./questionStatics.js');
 
 const PhotoSchema = new Schema({
   answer_id: { type: Number, required: true, index: true },
@@ -62,9 +62,9 @@ const QuestionSchema = new Schema({
 // });
 
 // Define the methods
-PhotoSchema.statics = photoMethods;
-AnswerSchema.statics = answerMethods;
-QuestionSchema.statics = questionMethods;
+PhotoSchema.statics = photoStatics;
+AnswerSchema.statics = answerStatics;
+QuestionSchema.statics = questionStatics;
 
 // Compile the schemas
 const Photo = model('Photo', PhotoSchema);
