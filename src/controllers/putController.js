@@ -1,4 +1,4 @@
-
+const db = require('../db/db-prod.js');
 
 exports.markQuestionHelpful = (req, res) => {
 

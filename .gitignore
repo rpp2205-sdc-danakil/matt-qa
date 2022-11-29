@@ -5,4 +5,7 @@
 node_modules/
 etl/*.csv
 etl/*.failed.txt
+etl/dump
+etl/export
+etl/orig
 *DS_Store

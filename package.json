@@ -9,7 +9,11 @@
     "test": "jest",
     "load-photos": "node etl/csv-to-mongo.js Photo",
     "load-answers": "node etl/csv-to-mongo.js Answer",
-    "load-questions": "node etl/csv-to-mongo.js Question"
+    "load-questions": "node etl/csv-to-mongo.js Question",
+    "export": "mongoexport --db=sdc --collection=question-news --type=json --out=./etl/export/question-news.json  mongodb://127.0.0.1:27017/",
+    "import": "mongoimport --db=sdc --collection=questions --type=json --file=./etl/export/question-news.json mongodb://127.0.0.1:27017/",
+    "dump": "mongodump --db=sdc --collection=question-news --out=./etl/dump/ --gzip mongodb://127.0.0.1:27017",
+    "restore": "mongorestore --nsFrom=sdc.question-news --nsTo=sdc.question --drop --archive=./etl/dump/sdc/question-news.metadata.json.gz --gzip mongodb://127.0.0.1:27017/"
   },
   "repository": {
     "type": "git",
