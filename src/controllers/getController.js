@@ -1,5 +1,14 @@
 const db = require('../db/db-prod.js');
 
+const convertPhotoArray = function (array) {
+  return array.map((url, i) => {
+    return {
+      id: i,
+      url: url
+    };
+  });
+}
+
 exports.getQuestions = function (req, res) {
   /* GET /qa/questions/:product_id */
 
@@ -43,11 +52,47 @@ exports.getQuestions = function (req, res) {
       res.status(200).send(response);
     })
     .catch(err => {
-      console.log('ERROR: getQuestions', err);
+      console.log('ERROR: getController: getQuestions', err);
       res.status(500).end();
     });
 };
 
-exports.getAnswers = (req, res) => {
 
+exports.getAnswers = (req, res) => {
+  const questionId = Number(req.params.question_id);
+  const options = {
+    page: Number(req.query.page) || 1,
+    count: Number(req.query.count) || 5
+  };
+
+  if (!questionId) {
+    res.status(400).end();
+    return;
+  }
+
+
+  db.Answer.getAnswers(questionId, options)
+    .then(answerList => {
+      let answers;
+      if (answerList.length) {
+        answers = answerList.map((answer) => {
+          return {
+            ...answer,
+            photos: convertPhotoArray(answer.photos)
+          };
+          // answerList[i].photos = convertPhotoArray(answerList[i].photos);
+          // delete answer.id;
+        });
+      }
+      res.status(200).send({
+        question: questionId,
+        page: options.page,
+        count: options.count,
+        results: answers
+      });
+    })
+    .catch(err => {
+      console.log('ERROR: getController: getAnswers', err);
+      res.status(500).end();
+    });
 };

@@ -14,8 +14,7 @@ exports.getQuestions = function (productId, options) {
     question_date: '$date_written',
     asker_name: 1,
     question_helpfulness: '$helpfulness',
-    reported: 1,
-    answers: 1
+    reported: 1
   }, {
     skip: (page - 1) * count,
     limit: count
@@ -23,17 +22,14 @@ exports.getQuestions = function (productId, options) {
     .exec();
 };
 
-exports.getAnswers = function (questionId, options) {
-  const page = options.page || 1;
-  const count = options.count || 5;
-  // get questions for a certain product ID based on page and count
-  // get all answers for each question and insert them as an array into each question object
-  // get all photos for each answer and insert them as an array into each answer object
-
-  return this.find({ _id: questionId }, {
-    answers: 1
-  }, {
-    skip: (page - 1) * count,
-    limit: count
+exports.markHelpful = function (questionId) {
+  return this.findByIdAndUpdate(questionId, {
+    $inc: { helpfulness: 1 }
   });
-}
+};
+
+exports.report = function (questionId) {
+  return this.findByIdAndUpdate(questionId, {
+    reported: true
+  });
+};
