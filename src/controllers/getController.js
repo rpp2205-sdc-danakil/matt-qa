@@ -23,23 +23,20 @@ exports.getQuestions = function (req, res) {
 
   db.Question.getQuestions(productId, options)
     .then(questions => {
-      console.log('GOT DATA! ', questions);
+      // console.log('GOT DATA! ', questions);
       const response = {};
       response.product_id = String(productId);
       response.results = questions;
       for (const question of questions) {
-        // const question = questions[key];
-        // delete question.id;
-        // delete question['_id'];
-        console.log('QUESTION', question);
+        if (question.answers) {
+          for (const id in question.answers) {
+            const answer = question.answers[id];
 
-        for (const id in question.answers) {
-          const answer = question.answers[id];
-
-          if (answer.reported) {
-            delete question.answer[id];
-          } else {
-            delete answer.answerer_email;
+            if (answer.reported) {
+              delete question.answers[id];
+            } else {
+              delete answer.answerer_email;
+            }
           }
         }
       }
