@@ -4,7 +4,7 @@ const db = mongoose.connect(process.env.DB_PROD_URL);
 const { Schema, model } = mongoose;
 
 // const photoStatics = require('./photoStatics.js');
-// const answerStatics = require('./answerStatics.js');
+const answerStatics = require('./answerStatics.js');
 const questionStatics = require('./questionStatics.js');
 
 // const PhotoSchema = new Schema({
@@ -14,21 +14,21 @@ const questionStatics = require('./questionStatics.js');
 //   versionKey: false
 // });
 
-// const AnswerSchema = new Schema({
-//   _id: Number,
-//   question_id: { type: Number, required: true, index: true },
-//   body: String,
-//   date_written: { type: Date, default: Date.now },
-//   answerer_name: String,
-//   answerer_email: String,
-//   helpfulness: Number,
-//   reported: Boolean,
-//   photos: [String]
-// }, {
-//   versionKey: false,
-//   toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
-//   toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
-// });
+const AnswerSchema = new Schema({
+  _id: Number,
+  question_id: { type: Number, required: true, index: true },
+  body: String,
+  date: { type: Date, default: Date.now },
+  answerer_name: String,
+  answerer_email: String,
+  helpfulness: Number,
+  reported: Boolean,
+  photos: [String]
+}, {
+  versionKey: false,
+  toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+  toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
+});
 
 const QuestionSchema = new Schema({
   _id: Number,
@@ -46,7 +46,7 @@ const QuestionSchema = new Schema({
   toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
 });
 
-// // Define the virtuals
+// Define the virtuals
 // QuestionSchema.virtual('answers', {
 //   ref: 'Answer',
 //   localField: '_id',
@@ -63,16 +63,16 @@ const QuestionSchema = new Schema({
 
 // Define the methods
 // PhotoSchema.statics = photoStatics;
-// AnswerSchema.statics = answerStatics;
+AnswerSchema.statics = answerStatics;
 QuestionSchema.statics = questionStatics;
 
 // Compile the schemas
 // const Photo = model('Photo', PhotoSchema);
-// const Answer = model('Answer', AnswerSchema);
+const Answer = model('Answer', AnswerSchema);
 const Question = model('Question', QuestionSchema);
 
 // Photo.createCollection();
-// Answer.createCollection();
-Question.createCollection();
+Answer.createCollection();
+// Question.createCollection();
 
-module.exports = { Question };
+module.exports = { Answer, Question };
