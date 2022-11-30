@@ -14,6 +14,11 @@ const questionStatics = require('./questionStatics.js');
 //   versionKey: false
 // });
 
+const answerGetter = function (answer) {
+  console.log('ANSWER GETTER:', answer);
+  return answer;
+}
+
 const AnswerSchema = new Schema({
   _id: Number,
   question_id: { type: Number, required: true, index: true },
@@ -38,8 +43,7 @@ const QuestionSchema = new Schema({
   asker_name: String,
   asker_email: String,
   helpfulness: Number,
-  reported: Boolean,
-  answers: Object
+  reported: Boolean
 }, {
   versionKey: false,
   toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
@@ -47,12 +51,12 @@ const QuestionSchema = new Schema({
 });
 
 // Define the virtuals
-// QuestionSchema.virtual('answers', {
-//   ref: 'Answer',
-//   localField: '_id',
-//   foreignField: 'question_id',
-//   match: { reported: false }
-// });
+QuestionSchema.virtual('answers', {
+  ref: 'Answer',
+  localField: '_id',
+  foreignField: 'question_id',
+  match: { reported: false }
+});
 
 // AnswerSchema.virtual('photos', {
 //   ref: 'Photo',

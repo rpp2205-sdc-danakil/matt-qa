@@ -19,7 +19,6 @@ exports.getAnswers = function (questionId, options) {
     .exec();
 };
 
-
 exports.getAnswersForQuestions = function (questionId, options) {
   const page = options.page || 1;
   const count = options.count || 5;
@@ -35,7 +34,20 @@ exports.getAnswersForQuestions = function (questionId, options) {
     photos: 1
   }, {
     skip: (page - 1) * count,
-    limit: count
+    limit: count,
+    lean: true
   })
     .exec();
-}
+};
+
+exports.markHelpful = function (answerId) {
+  return this.findByIdAndUpdate(answerId, {
+    $inc: { helpfulness: 1 }
+  });
+};
+
+exports.report = function (answerId) {
+  return this.findByIdAndUpdate(answerId, {
+    reported: true
+  });
+};
