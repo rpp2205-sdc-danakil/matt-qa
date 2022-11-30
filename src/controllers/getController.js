@@ -54,8 +54,6 @@ exports.getAnswers = (req, res) => {
             ...answer,
             photos: convertPhotoArray(answer.photos)
           };
-          // answerList[i].photos = convertPhotoArray(answerList[i].photos);
-          // delete answer.id;
         });
       }
       res.status(200).send({

@@ -73,3 +73,11 @@ exports.markReported = function (questionId) {
     reported: true
   });
 };
+
+exports.insertNewQuestion = function (question) {
+  return this.find({}).sort({ _id: -1 }).limit(1)
+    .then(lastDoc => {
+      question._id = lastDoc._id + 1;
+      return this.insertMany(question);
+    });
+}

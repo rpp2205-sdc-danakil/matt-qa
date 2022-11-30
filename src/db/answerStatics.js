@@ -51,3 +51,11 @@ exports.markReported = function (answerId) {
     reported: true
   });
 };
+
+exports.insertNewAnswer = function (answer) {
+  return this.find({}).sort({ _id: -1 }).limit(1)
+    .then(lastDoc => {
+      answer._id = lastDoc._id + 1;
+      return this.insertMany(answer);
+    });
+};
