@@ -46,7 +46,7 @@ exports.markHelpful = function (answerId) {
   });
 };
 
-exports.report = function (answerId) {
+exports.markReported = function (answerId) {
   return this.findByIdAndUpdate(answerId, {
     reported: true
   });
