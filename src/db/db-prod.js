@@ -3,16 +3,9 @@ const mongoose = require('mongoose');
 const db = mongoose.connect(process.env.DB_PROD_URL);
 const { Schema, model } = mongoose;
 
-// const photoStatics = require('./photoStatics.js');
 const answerStatics = require('./answerStatics.js');
 const questionStatics = require('./questionStatics.js');
 
-// const PhotoSchema = new Schema({
-//   answer_id: { type: Number, required: true, index: true },
-//   url: { type: String, required: true },
-// }, {
-//   versionKey: false
-// });
 
 const answerGetter = function (answer) {
   console.log('ANSWER GETTER:', answer);
@@ -58,25 +51,23 @@ QuestionSchema.virtual('answers', {
   match: { reported: false }
 });
 
-// AnswerSchema.virtual('photos', {
-//   ref: 'Photo',
-//   localField: '_id',
-//   foreignField: 'answer_id',
-//   $group: { _id: null, photos: { $addToSet: 'url'}}
-// });
-
-// Define the methods
-// PhotoSchema.statics = photoStatics;
+// Define the methodss
 AnswerSchema.statics = answerStatics;
 QuestionSchema.statics = questionStatics;
 
 // Compile the schemas
-// const Photo = model('Photo', PhotoSchema);
 const Answer = model('Answer', AnswerSchema);
 const Question = model('Question', QuestionSchema);
 
-// Photo.createCollection();
 Answer.createCollection();
-// Question.createCollection();
+Question.createCollection();
 
-module.exports = { Answer, Question };
+//////////////////////////////////////////////////
+
+const disconnect = function () {
+  return mongoose.connection.close();
+}
+
+//////////////////////////////////////////////////
+
+module.exports = { Answer, Question, disconnect };

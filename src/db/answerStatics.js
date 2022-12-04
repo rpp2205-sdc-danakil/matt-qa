@@ -53,9 +53,30 @@ exports.markReported = function (answerId) {
 };
 
 exports.insertNewAnswer = function (answer) {
-  return this.find({}).sort({ _id: -1 }).limit(1)
-    .then(lastDoc => {
-      answer._id = lastDoc._id + 1;
+  return this.maxId
+    .then(lastId => {
+      answer._id = lastId + 1;
       return this.insertMany(answer);
     });
+};
+
+exports.maxId = function () {
+  return this.find({}).sort({ _id: -1 }).limit(1)
+    .then(lastDoc => {
+      return Promise.resolve(lastDoc._id);
+    });
+};
+
+exports.getSample = function (size = 1) {
+  return this.aggregate([
+    { $sample: { size }}
+  ]);
+};
+
+exports.getArrayOfUniqueQuestionIDs = function () {
+  return this.distinct('question_id');
+};
+
+exports.getHelpfulness = function (id) {
+  return this.findById(id).then(doc => Promise.resolve(doc.helpfulness));
 };
