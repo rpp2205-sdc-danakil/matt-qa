@@ -53,11 +53,7 @@ exports.markReported = function (answerId) {
 };
 
 exports.insertNewAnswer = function (answer) {
-  return this.maxId
-    .then(lastId => {
-      answer._id = lastId + 1;
-      return this.insertMany(answer);
-    });
+  return this.insertMany(answer);
 };
 
 exports.maxId = function () {

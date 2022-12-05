@@ -117,8 +117,42 @@ describe('Q&A API Testing', () => {
     });
   });
 
-  describe("'POST' endpoints", () => {
+  describe.only("'POST' endpoints", () => {
+    let testQuestionId, testAnswerId;
+    const testQuestion = {
+      body: 'This is a test question',
+      name: 'tester',
+      email: 'test@test.com',
+      product_id: '999999999'
+    };
+    const testAnswer = {
+      body: 'This is a test question',
+      name: 'tester',
+      email: 'test@test.com',
+      photos: [ 'https://this-is-a-test.url' ]
+    };
 
+    it('Should insert a new question', () => {
+      return request(app)
+        .post('/qa/questions')
+        .send(testQuestion)
+        .then(response => {
+          testQuestionId = response.body._id;
+          console.log('testQuestionId', testQuestionId);
+          expect(response.statusCode).toBe(201);
+        });
+    });
+
+    it('Should insert a new answer', () => {
+      return request(app)
+        .post(`/qa/questions/999999999/answers`)
+        .send(testAnswer)
+        .then(response => {
+          testAnswerId = response.body._id;
+          console.log('testAnswerId', testAnswerId);
+          expect(response.statusCode).toBe(201);
+        });
+    });
   });
 });
 

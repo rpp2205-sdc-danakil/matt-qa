@@ -75,11 +75,7 @@ exports.markReported = function (questionId) {
 };
 
 exports.insertNewQuestion = function (question) {
-  return this.maxId
-    .then(lastId => {
-      question._id = lastId + 1;
-      return this.insertMany(question);
-    });
+  return this.insertMany(question);
 };
 
 exports.maxId = function () {
