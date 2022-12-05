@@ -1,5 +1,4 @@
 const db = require('../db/db-prod.js');
-const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.postQuestion = (req, res) => {
   const { body, name, email, product_id } = req.body;
@@ -9,7 +8,6 @@ exports.postQuestion = (req, res) => {
   }
 
   const question = {
-    _id: new ObjectId,
     product_id: product_id,
     body: body,
     asker_name: name,
@@ -19,8 +17,12 @@ exports.postQuestion = (req, res) => {
     reported: false
   };
 
-  db.Question.maxId
-  db.Question.insertNewQuestion(question)
+  db.Question.maxId()
+    .then(lastId => {
+      console.log('MAX', lastId);
+      question._id = lastId + 1;
+      return db.Question.insertNewQuestion(question)
+    })
     .then(result => {
       res.status(201).send(question);
     })
@@ -42,7 +44,6 @@ exports.postAnswer = (req, res) => {
   }
 
   const answer = {
-    _id: new ObjectId,
     question_id: questionId,
     body: body,
     date: Date.now(),
@@ -53,7 +54,12 @@ exports.postAnswer = (req, res) => {
     photos: photos
   };
 
-  db.Answer.insertNewAnswer(answer)
+  db.Answer.maxId()
+    .then(lastId => {
+      console.log('MAX', lastId);
+      answer._id = lastId + 1;
+      return db.Answer.insertNewAnswer(answer);
+    })
     .then(result => {
       res.status(201).send(answer);
     })

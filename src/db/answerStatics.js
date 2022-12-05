@@ -59,7 +59,7 @@ exports.insertNewAnswer = function (answer) {
 exports.maxId = function () {
   return this.find({}).sort({ _id: -1 }).limit(1)
     .then(lastDoc => {
-      return Promise.resolve(lastDoc._id);
+      return Promise.resolve(lastDoc[0]._id);
     });
 };
 

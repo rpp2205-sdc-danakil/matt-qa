@@ -117,7 +117,7 @@ describe('Q&A API Testing', () => {
     });
   });
 
-  describe.only("'POST' endpoints", () => {
+  describe("'POST' endpoints", () => {
     let testQuestionId, testAnswerId;
     const testQuestion = {
       body: 'This is a test question',

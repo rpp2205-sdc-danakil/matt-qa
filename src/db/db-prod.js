@@ -1,6 +1,6 @@
 require('custom-env').env('default');
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+// const ObjectId = mongoose.Types.ObjectId;
 const db = mongoose.connect(process.env.DB_PROD_URL);
 const { Schema, model } = mongoose;
 
@@ -14,7 +14,7 @@ const answerGetter = function (answer) {
 }
 
 const AnswerSchema = new Schema({
-  _id: ObjectId,
+  _id: Number,
   question_id: { type: Number, required: true, index: true },
   body: String,
   date: { type: Date, default: Date.now },
@@ -30,7 +30,7 @@ const AnswerSchema = new Schema({
 });
 
 const QuestionSchema = new Schema({
-  _id: ObjectId,
+  _id: Number,
   product_id: { type: Number, required: true, index: true },
   body: String,
   date_written: { type: Date, default: Date.now },
