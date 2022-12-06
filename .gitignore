@@ -8,4 +8,5 @@ etl/*.failed.txt
 etl/dump
 etl/export
 etl/orig
+coverage/
 *DS_Store

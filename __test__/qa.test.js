@@ -37,10 +37,6 @@ describe('Q&A API Testing', () => {
     return db.disconnect();
   });
 
-  // beforeEach(() => {
-  //   randomQuestionId = getRandomQuestionId();
-  //   randomAnswerId = getRandomAnswerId();
-  // });
 
   describe("'GET' endpoints", () => {
     it('Should get questions', () => {
@@ -50,7 +46,7 @@ describe('Q&A API Testing', () => {
         .then(response => {
           expect(response.statusCode).toBe(200);
         });
-    });
+    }, 10000);
 
     it('Should get answers', () => {
       return request(app)
@@ -58,23 +54,11 @@ describe('Q&A API Testing', () => {
         .then(response => {
           expect(response.statusCode).toBe(200);
         });
-    });
-  })
+    }, 10000);
+  });
 
   describe("'PUT' endpoints", () => {
     describe("Helpfulness", () => {
-      // let origAnswerHelpfulness, origQuestionHelpfulness;
-
-      // beforeEach(() => {
-      //   return db.Question.getHelpfulness(randomQuestionId)
-      //     .then(helpfulness => {
-      //       origQuestionHelpfulness = helpfulness;
-      //       return db.Answer.getHelpfulness(randomAnswerId);
-      //     })
-      //     .then(helpfulness => {
-      //       origQuestionHelpfulness = helpfulness;
-      //     });
-      // });
 
       it("Should increment a question's helpfulness", () => {
         return request(app)
@@ -138,7 +122,6 @@ describe('Q&A API Testing', () => {
         .send(testQuestion)
         .then(response => {
           testQuestionId = response.body._id;
-          console.log('testQuestionId', testQuestionId);
           expect(response.statusCode).toBe(201);
         });
     });
@@ -149,7 +132,6 @@ describe('Q&A API Testing', () => {
         .send(testAnswer)
         .then(response => {
           testAnswerId = response.body._id;
-          console.log('testAnswerId', testAnswerId);
           expect(response.statusCode).toBe(201);
         });
     });

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=production node src/server.js",
     "dev": "NODE_ENV=development nodemon src/server.js",
-    "test": "jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles --coverage",
     "load-photos": "node etl/csv-to-mongo.js Photo",
     "load-answers": "node etl/csv-to-mongo.js Answer",
     "load-questions": "node etl/csv-to-mongo.js Question",

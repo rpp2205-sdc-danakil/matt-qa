@@ -49,22 +49,17 @@ exports.reportQuestion = (req, res) => {
 };
 
 exports.reportAnswer = (req, res) => {
-  let answerId = req.params.answer_id;
-  console.log('ANSWER ID1', typeof answerId, answerId);
-
+  const answerId = req.params.answer_id;
   if (!answerId) {
     res.status(400).end();
     return;
   }
-
-  console.log('ANSWER ID2', typeof answerId, answerId);
 
   db.Answer.markReported(answerId)
     .then(() => {
       res.status(204).end()
     })
     .catch((err) => {
-      console.log('DB ERROR', err);
       res.status(500).end();
     });
 };

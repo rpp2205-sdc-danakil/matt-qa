@@ -19,7 +19,6 @@ exports.postQuestion = (req, res) => {
 
   db.Question.maxId()
     .then(lastId => {
-      console.log('MAX', lastId);
       question._id = lastId + 1;
       return db.Question.insertNewQuestion(question)
     })
@@ -56,7 +55,6 @@ exports.postAnswer = (req, res) => {
 
   db.Answer.maxId()
     .then(lastId => {
-      console.log('MAX', lastId);
       answer._id = lastId + 1;
       return db.Answer.insertNewAnswer(answer);
     })
@@ -64,7 +62,7 @@ exports.postAnswer = (req, res) => {
       res.status(201).send(answer);
     })
     .catch(err => {
-      console.log('Error inserting new answer');
+      console.log('Error inserting new answer', err);
       res.status(500).end();
     });
 };

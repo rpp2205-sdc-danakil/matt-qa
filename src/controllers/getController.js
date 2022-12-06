@@ -24,7 +24,11 @@ exports.getQuestions = function (req, res) {
 
   db.Question.getQuestionsByProductId(productId)
     .then(data => {
-      res.status(200).send(data);
+      const resBody = {
+        product_id: String(productId),
+        results: data
+      };
+      res.status(200).send(resBody);
     })
     .catch(err => {
       res.status(500).end();

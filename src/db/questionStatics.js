@@ -1,11 +1,8 @@
 
 
 exports.getQuestionsByProductId = function (productId, options) {
-  const page = (options && options.page)|| 1;
+  const page = (options && options.page) || 1;
   const count = (options && options.count) || 5;
-  // get questions for a certain product ID based on page and count
-  // get all answers for each question and insert them as an array into each question object
-  // get all photos for each answer and insert them as an array into each answer object
 
   return this.aggregate(
     [
@@ -16,20 +13,9 @@ exports.getQuestionsByProductId = function (productId, options) {
         }
       },
       {
-        "$project": {
-          "question_id": "$_id",
-          "_id": 0.0,
-          "question_body": "$body",
-          "question_date": "$date_written",
-          "asker_name": 1.0,
-          "question_helpfulness": "$helpfulness",
-          "reported": 1.0
-        }
-      },
-      {
         "$lookup": {
           "from": "answers",
-          "localField": "question_id",
+          "localField": "_id",
           "foreignField": "question_id",
           "as": "answers",
           "pipeline": [
@@ -43,8 +29,54 @@ exports.getQuestionsByProductId = function (productId, options) {
                 "helpfulness": 1.0,
                 "photos": 1.0
               }
+            },
+            {
+              "$group": {
+                "_id": null,
+                "docs": {
+                  "$mergeObjects": {
+                    "$arrayToObject": [
+                      [
+                        {
+                          "k": {
+                            "$toString": "$id"
+                          },
+                          "v": "$$ROOT"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "$replaceWith": "$docs"
             }
           ]
+        }
+      },
+      {
+        "$project": {
+          "question_id": "$_id",
+          "_id": 0.0,
+          "question_body": "$body",
+          "question_date": "$date_written",
+          "asker_name": 1.0,
+          "question_helpfulness": "$helpfulness",
+          "reported": 1.0,
+          "answers": {
+            "$ifNull": [
+              {
+                "$arrayElemAt": [
+                  "$answers",
+                  0.0
+                ]
+              },
+              {
+
+              }
+            ]
+          }
         }
       }
     ],
@@ -52,9 +84,6 @@ exports.getQuestionsByProductId = function (productId, options) {
       "allowDiskUse": false
     }
   )
-    // .then(data => {
-    //   return Promise.resolve(data);
-    // })
     .catch(err => {
       console.log('Error: getQuestionById: Failed getting question for product:', productId);
       return Promise.reject(err);
@@ -87,7 +116,7 @@ exports.maxId = function () {
 
 exports.getSample = function (size = 1) {
   return this.aggregate([
-    { $sample: { size }}
+    { $sample: { size } }
   ]);
 };
 
