@@ -39,7 +39,7 @@ exports.postAnswer = (req, res) => {
     return;
   }
   if (!photos) {
-    photos = [];
+   const photos = [];
   }
 
   const answer = {
