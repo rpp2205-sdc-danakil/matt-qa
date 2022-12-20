@@ -1,7 +1,7 @@
 require('custom-env').env('default');
 const mongoose = require('mongoose');
 // const ObjectId = mongoose.Types.ObjectId;
-const db = mongoose.connect(process.env.DB_PROD_URL);
+const db = mongoose.connect(process.env.DB_PROD_URL).catch(err => console.log('ERROR CONNECTIONG TO DB...', err));
 const { Schema, model } = mongoose;
 
 const answerStatics = require('./answerStatics.js');
