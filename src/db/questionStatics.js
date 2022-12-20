@@ -22,12 +22,12 @@ exports.getQuestionsByProductId = function (productId, options) {
             {
               "$project": {
                 "id": "$_id",
-                "_id": 0.0,
-                "body": 1.0,
-                "date": 1.0,
-                "answerer_name": 1.0,
-                "helpfulness": 1.0,
-                "photos": 1.0
+                "_id": 0,
+                "body": 1,
+                "date": 1,
+                "answerer_name": 1,
+                "helpfulness": 1,
+                "photos": 1
               }
             },
             {
@@ -58,18 +58,18 @@ exports.getQuestionsByProductId = function (productId, options) {
       {
         "$project": {
           "question_id": "$_id",
-          "_id": 0.0,
+          "_id": 0,
           "question_body": "$body",
           "question_date": "$date_written",
-          "asker_name": 1.0,
+          "asker_name": 1,
           "question_helpfulness": "$helpfulness",
-          "reported": 1.0,
+          "reported": 1,
           "answers": {
             "$ifNull": [
               {
                 "$arrayElemAt": [
                   "$answers",
-                  0.0
+                  0
                 ]
               },
               {
@@ -85,7 +85,7 @@ exports.getQuestionsByProductId = function (productId, options) {
     }
   )
     .catch(err => {
-      console.log('Error: getQuestionById: Failed getting question for product:', productId);
+      console.log('Error: getQuestionsByProductId: Failed getting questions for product:', productId);
       return Promise.reject(err);
     });
 

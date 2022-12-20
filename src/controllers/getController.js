@@ -49,7 +49,7 @@ exports.getAnswers = (req, res) => {
   }
 
 
-  db.Answer.getAnswers(questionId, options)
+  db.Answer.getAnswersByQuestionId(questionId, options)
     .then(answerList => {
       let answers;
       if (answerList.length) {
@@ -61,9 +61,8 @@ exports.getAnswers = (req, res) => {
         });
       }
       res.status(200).send({
+        ...options,
         question: questionId,
-        page: options.page,
-        count: options.count,
         results: answers
       });
     })
