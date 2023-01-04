@@ -40,8 +40,8 @@ export default function () {
   // make sure this is not production url
   // const BASE_URL = "http://127.0.0.1:3000";
   // const ENDPOINT = "/qa/questions";
-  const urlQuestions = `http://127.0.0.1:3000/qa/questions/?product_id=${getRandomProductId()}`;
-  const urlAnswers = `http://127.0.0.1:3000/qa/questions/${getRandomQuestionId()}/answers`;
+  const urlQuestions = `http://sdc.ecitytech.net/qa/questions/?product_id=${getRandomProductId()}`;
+  const urlAnswers = `http://sdc.ecitytech.net/qa/questions/${getRandomQuestionId()}/answers`;
   const params = {
     headers: {
       "Content-Type": "application/json",

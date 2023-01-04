@@ -35,7 +35,7 @@ describe('Q&A API Testing', () => {
 
   afterAll((done) => {
     db.disconnect();
-    app.close();
+    // app.close();
     done();
   });
 

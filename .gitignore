@@ -11,4 +11,5 @@ etl/orig
 coverage/
 *DS_Store
 
+__deploy__/
 __test__/load/product_ids.js
