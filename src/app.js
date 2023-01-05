@@ -23,7 +23,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use(require('morgan')('dev'));
 }
 
-app.get('/loaderio-a596afe40ce4446469c26baca4f93040', (req, res) => res.status(200).send('loaderio-a596afe40ce4446469c26baca4f93040'));
+app.get('/loaderio-a596afe40ce4446469c26baca4f93040', (req, res) => {
+  res.status(200).set({
+    'Content-type': "application/octet-stream",
+    'Content-disposition': "attachment; filename=loaderio-a596afe40ce4446469c26baca4f93040.txt",
+  }).send('loaderio-a596afe40ce4446469c26baca4f93040')
+});
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
