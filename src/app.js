@@ -34,7 +34,10 @@ app.use(compression());
 app.get('/qa/questions', getQuestions);
 app.get('/qa/questions/:question_id/answers', getAnswers);
 
+///// routes needed to workaround webapp
 app.get('/qa/questions/:product_id/:count', getQuestions);
+app.get('/qa/questions/:question_id/answers/:count', getAnswers);
+////////
 
 app.post('/qa/questions', postQuestion);
 app.post('/qa/questions/:question_id/answers', postAnswer);

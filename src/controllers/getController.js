@@ -40,7 +40,7 @@ exports.getAnswers = (req, res) => {
   const questionId = Number(req.params.question_id);
   const options = {
     page: Number(req.query.page) || 1,
-    count: Number(req.query.count) || 5
+    count: Number(req.query.count) || Number(req.params.count) || 5
   };
 
   if (!questionId) {
