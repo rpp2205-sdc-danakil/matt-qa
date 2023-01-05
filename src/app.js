@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const compression = require('compression');
@@ -28,6 +29,9 @@ app.get('/loaderio-a596afe40ce4446469c26baca4f93040', (req, res) => {
     'Content-type': "application/octet-stream",
     'Content-disposition': "attachment; filename=loaderio-a596afe40ce4446469c26baca4f93040.txt",
   }).send('loaderio-a596afe40ce4446469c26baca4f93040')
+});
+app.use('/l42k3jh58/test', (req, res) => {
+  res.sendFile(path.join(__dirname, '../__test__/loaderio/payload.txt'));
 });
 
 app.use(cors({
