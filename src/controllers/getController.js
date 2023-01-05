@@ -12,10 +12,10 @@ const convertPhotoArray = function (array) {
 exports.getQuestions = function (req, res) {
   /* GET /qa/questions/:product_id */
 
-  const productId = Number(req.query.product_id);
+  const productId = Number(req.query.product_id) || Number(req.params.product_id);
   const options = {
     page: Number(req.query.page) || 1,
-    count: Number(req.query.count) || 5
+    count: Number(req.query.count) || Number(req.params.count) || 5
   };
   if (!productId) {
     res.status(400).end();
