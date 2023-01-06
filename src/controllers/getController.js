@@ -9,9 +9,25 @@ const convertPhotoArray = function (array) {
   });
 }
 
-exports.getQuestions = function (req, res) {
-  /* GET /qa/questions/:product_id */
+const convertAnswersArray = function (array) {
+  return array.reduce((accumulator, currentValue) => {
+    accumulator[currentValue.id] = currentValue
+    return accumulator;
+  }, {});
+}
 
+const parseQuestions = function (array) {
+  return array.map((cur, i) => {
+    if (cur.answers.length) {
+      cur.answers = convertAnswersArray(cur.answers);
+    } else {
+      cur.answers = {};
+    }
+    return cur;
+  });
+}
+
+exports.getQuestions = function (req, res) {
   const productId = Number(req.query.product_id) || Number(req.params.product_id);
   const options = {
     page: Number(req.query.page) || 1,
@@ -26,7 +42,7 @@ exports.getQuestions = function (req, res) {
     .then(data => {
       const resBody = {
         product_id: String(productId),
-        results: data
+        results: parseQuestions(data)
       };
       res.status(200).send(resBody);
     })
