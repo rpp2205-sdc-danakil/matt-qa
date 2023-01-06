@@ -30,28 +30,28 @@ exports.getQuestionsByProductId = function (productId, options) {
                 "photos": 1
               }
             },
-            {
-              "$group": {
-                "_id": null,
-                "docs": {
-                  "$mergeObjects": {
-                    "$arrayToObject": [
-                      [
-                        {
-                          "k": {
-                            "$toString": "$id"
-                          },
-                          "v": "$$ROOT"
-                        }
-                      ]
-                    ]
-                  }
-                }
-              }
-            },
-            {
-              "$replaceWith": "$docs"
-            }
+            // {
+            //   "$group": {
+            //     "_id": null,
+            //     "docs": {
+            //       "$mergeObjects": {
+            //         "$arrayToObject": [
+            //           [
+            //             {
+            //               "k": {
+            //                 "$toString": "$id"
+            //               },
+            //               "v": "$$ROOT"
+            //             }
+            //           ]
+            //         ]
+            //       }
+            //     }
+            //   }
+            // },
+            // {
+            //   "$replaceWith": "$docs"
+            // }
           ]
         }
       },
@@ -64,19 +64,19 @@ exports.getQuestionsByProductId = function (productId, options) {
           "asker_name": 1,
           "question_helpfulness": "$helpfulness",
           "reported": 1,
-          "answers": {
-            "$ifNull": [
-              {
-                "$arrayElemAt": [
-                  "$answers",
-                  0
-                ]
-              },
-              {
+          "answers": 1 //{
+          //   "$ifNull": [
+          //     {
+          //       "$arrayElemAt": [
+          //         "$answers",
+          //         0
+          //       ]
+          //     },
+          //     {
 
-              }
-            ]
-          }
+          //     }
+          //   ]
+          // }
         }
       }
     ],
